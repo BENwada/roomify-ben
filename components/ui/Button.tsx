@@ -1,7 +1,7 @@
 import React from "react";
 
 type ButtonProps = {
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | "outline";
   size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
   className?: string;
@@ -33,4 +33,3 @@ const Button = ({
 };
 
 export default Button;
-
