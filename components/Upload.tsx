@@ -4,7 +4,7 @@ import {
   REDIRECT_DELAY_MS,
 } from "lib/constants";
 import { CheckCircle2, ImageIcon, UploadIcon } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useOutletContext } from "react-router";
 interface UploadProps {
   onComplete: (data: string) => void;
@@ -13,6 +13,7 @@ const Upload = ({ onComplete }: UploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [progress, setProgress] = useState(0);
+  const interval = useRef<number | null>(null);
 
   const { isSignedIn } = useOutletContext<AuthContext>();
 
@@ -21,17 +22,25 @@ const Upload = ({ onComplete }: UploadProps) => {
     setFile(file);
     const reader = new FileReader();
     reader.onloadstart = () => {
-      const interval = setInterval(() => {
+      interval.current = window.setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
+          if (prev >= 99) {
+            if (interval.current) {
+              clearInterval(interval.current);
+              interval.current = null;
+            }
+            return 99;
           }
           return prev + PROGRESS_STEP;
         });
       }, PROGRESS_INTERVAL_MS);
     };
     reader.onloadend = () => {
+      if (interval.current) {
+        clearInterval(interval.current);
+        interval.current = null;
+      }
+      setProgress(100);
       setTimeout(() => {
         onComplete(reader.result as string);
       }, REDIRECT_DELAY_MS);
@@ -70,6 +79,7 @@ const Upload = ({ onComplete }: UploadProps) => {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      onDragOver={handleDragEnter}
     >
       {!file ? (
         <div className={`dropzone ${isDragging ? "is-dragging" : ""}`}>
@@ -88,7 +98,7 @@ const Upload = ({ onComplete }: UploadProps) => {
             <p>
               {isSignedIn
                 ? "Click to upload or just drag and drop"
-                : "Sign in or sign up width Puter to upload"}
+                : "Sign in or sign up with Puter to upload"}
             </p>
             <p className="help">Maximum file size 50 MB.</p>
           </div>
