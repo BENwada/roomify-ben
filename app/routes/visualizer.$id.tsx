@@ -2,18 +2,20 @@ import { useLocation } from "react-router";
 
 const VisualizerId = () => {
   const location = useLocation();
-  const { image } = location.state || {};
+  const { initialImage, name } = location.state || {};
 
   return (
-    <div>
-      <h2>Visualizer</h2>
-      {image ? (
-        <img src={image} alt="Uploaded floor plan" style={{ maxWidth: "100%" }} />
-      ) : (
-        <p>No image data found.</p>
+    <section>
+      <h1>{name || "Untitled Project"}</h1>
+      {initialImage && (
+        <div className="image-container">
+          <h2>Source Image</h2>
+          <img src={initialImage} alt="source" />
+        </div>
       )}
-    </div>
+    </section>
   );
 };
 
 export default VisualizerId;
+
