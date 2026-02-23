@@ -82,7 +82,7 @@ const VisualizerId = () => {
               </Button>
               <Button size="sm" onClick={() => {}} className="share">
                 <Share2 className="w-4 h-4 mr-2" />
-                Shere
+                Share
               </Button>
             </div>
           </div>
@@ -107,7 +107,7 @@ const VisualizerId = () => {
                   <RefreshCcw className="spinner" />
                   <span className="title">Rendering...</span>
                   <span className="subtitle">
-                    Genetating your 3D visualization
+                    Generating your 3D visualization
                   </span>
                 </div>
               </div>
